@@ -18,6 +18,11 @@ press 'run' in your python IDE to see the results.
 uses numpy, pandas, and cv2
 """
 
+"""testing parameters"""
+numOfTestImages=100      #number of random test images to cycle through
+durationPerImg=500      #duration of each test image on the screen, milliseconds
+threshold=0.2           #hyper parameter: lower value for more accuracy among known subjects
+                        #                 higher value more false positives
 
 import numpy as np
 import pandas as pd
@@ -188,91 +193,69 @@ trainRange=range(4,8)
 radiusFrame,maxDist=train(trainStudent,trainRange,dir_path,averageVec,eigFaces,baseWeights)
 
 """testing, graphic pop-up window, see below for statstics"""
-testStudent=int(np.random.randint(low=1,high=41,size=1))
-testPic=int(np.random.randint(low=8,high=10,size=1))
+rightGuess=0
+totalCount=0
+for i in range(0,numOfTestImages):
+    totalCount+=1
+    
+    testStudent=int(np.random.randint(low=1,high=42,size=1))
+    testPic=int(np.random.randint(low=8,high=10,size=1))
 
-testPath=dir_path.format(testStudent,testPic)
-testImg=cv2.imread(testPath,0)
-#cv2.imshow("test img",testImg)
+    testPath=dir_path.format(testStudent,testPic)
+    testImg=cv2.imread(testPath,0)
+    #cv2.imshow("test img",testImg)
 
-testVec,projectedFace,spaceDist,distVec=projectFace(testPath,averageVec,eigFaces,baseWeights)
-pos=np.argmin(distVec)+1
 
-threshold=0.25
-distRelax=1.3
-if spaceDist>maxDist*distRelax:
-    print("Actual student {}. Guessed ".format(testStudent) + "not a face")
-    path=r"..\eigenFace\NOT_FACE-01.jpg"
-    message=cv2.imread(path,0)
-    initPos=414
-    collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
-else:
-    minDist=distVec.min()
-    possibleStudent="student {}".format(np.argmin(distVec)+1)
-    studentRadius=radiusFrame[possibleStudent].values
-    if minDist<studentRadius:
-        print("Actual student {}. Guessed ".format(testStudent)+"face belongs to ", possibleStudent)
-        path=r"..\eigenFace\pointer.jpg"
+    testVec,projectedFace,spaceDist,distVec=projectFace(testPath,averageVec,eigFaces,baseWeights)
+    pos=np.argmin(distVec)+1
+
+    distRelax=1.3
+
+    if spaceDist>maxDist*distRelax:
+        print("Actual student {}. Guessed ".format(testStudent) + "not a face")
+        path=r"..\eigenFace\NOT_FACE-01.jpg"
         message=cv2.imread(path,0)
-        initPos=92*(pos-1)
+        initPos=414
         collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
+        guess=0
     else:
-        diffPercent=(minDist-studentRadius)/minDist
-        if diffPercent<threshold:
+        minDist=distVec.min()
+        possibleStudent="student {}".format(np.argmin(distVec)+1)
+        studentRadius=radiusFrame[possibleStudent].values
+        if minDist<studentRadius:
             print("Actual student {}. Guessed ".format(testStudent)+"face belongs to ", possibleStudent)
             path=r"..\eigenFace\pointer.jpg"
             message=cv2.imread(path,0)
             initPos=92*(pos-1)
             collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
+            guess=pos
         else:
-            print("Actual student {}. Guessed ".format(testStudent)+"new face")
-            path=r"..\eigenFace\new-01.jpg"
-            message=cv2.imread(path,0)
-            initPos=414
-            collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
-            guess=-1
-
-
-"""testing, cycles through all photos to obtain accuracy statistics, uncomment and comment above"""
-#rightGuess=0
-#falsePositive=0
-#totalCount=0
-#for i in range(1,11):
-#    for j in range(8,11):
-#        totalCount+=1
-#        testPath=dir_path.format(i,j)
-#        testVec,projectedFace,spaceDist,distVec=projectFace(testPath,averageVec,eigFaces,baseWeights)
-#        pos=np.argmin(distVec)+1
-#
-#        threshold=0.1
-#        distRelax=1.1
-#        if spaceDist>maxDist*distRelax:
-#            print("Actual student {}. Guessed ".format(i) + "not a face")
-#            guess=0
-#        else:
-#            minDist=distVec.min()
-#            possibleStudent="student {}".format(np.argmin(distVec)+1)
-#            studentRadius=radiusFrame[possibleStudent].values
-#            if minDist<studentRadius:
-#                print("Actual student {}. Guessed ".format(i)+"face belongs to ", possibleStudent)
-#                guess=pos
-#            else:
-#                diffPercent=(minDist-studentRadius)/minDist
-#                if diffPercent<threshold:
-#                    print("Actual student {}. Guessed ".format(i)+"face belongs to ", possibleStudent)
-#                    guess=pos
-#                else:
-#                    print("Actual student {}. Guessed ".format(i)+"new face")
-#                    guess=-1
-#                
-#        if guess==i:
-#            rightGuess+=1   
-#        if guess==-1 and i>10:
-#            rightGuess+=1
-##            if i>10 and candidate==-1:
-##                falsePositive+=1
-#print("accuracy: ",rightGuess/totalCount)
+            diffPercent=(minDist-studentRadius)/minDist
+            if diffPercent<threshold:
+                print("Actual student {}. Guessed ".format(testStudent)+"face belongs to ", possibleStudent)
+                path=r"..\eigenFace\pointer.jpg"
+                message=cv2.imread(path,0)
+                initPos=92*(pos-1)
+                collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
+                guess=pos
+            else:
+                print("Actual student {}. Guessed ".format(testStudent)+"new face")
+                path=r"..\eigenFace\new-01.jpg"
+                message=cv2.imread(path,0)
+                initPos=414
+                collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
+                guess=-1
+    if guess==testStudent:
+        rightGuess+=1
+    if guess==-1 and 10<testStudent<41:
+        rightGuess+=1
         
+    cv2.waitKey(durationPerImg)
+cv2.destroyAllWindows()
+print("accuracy: ",round(rightGuess/totalCount*100,2),"%")
+
+
+#       
 
         
 
