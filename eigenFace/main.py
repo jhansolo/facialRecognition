@@ -19,7 +19,7 @@ uses numpy, pandas, and cv2
 """
 
 """testing parameters"""
-numOfTestImages=100      #number of random test images to cycle through
+numOfTestImages=20      #number of random test images to cycle through
 durationPerImg=500      #duration of each test image on the screen, milliseconds
 threshold=0.2           #hyper parameter: lower value for more accuracy among known subjects
                         #                 higher value more false positives
