@@ -174,7 +174,7 @@ picHeight=112
 picWidth=92
 
 """load training data"""
-dir_path=r"..\eigenFace\cambridge\s{}\{}.pgm"              ##location of training data
+dir_path=r"cambridge/s{}/{}.pgm"              ##location of training data
 studentNumber=10                                                    ##number of students to train from
 studentRange=range(1,11)
 faceRange=range(1,4)                                                        ##number of faces per student
@@ -213,7 +213,7 @@ for i in range(0,numOfTestImages):
 
     if spaceDist>maxDist*distRelax:
         print("Actual student {}. Guessed ".format(testStudent) + "not a face")
-        path=r"..\eigenFace\NOT_FACE-01.jpg"
+        path=r"NOT_FACE-01.jpg"
         message=cv2.imread(path,0)
         initPos=414
         collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
@@ -224,7 +224,7 @@ for i in range(0,numOfTestImages):
         studentRadius=radiusFrame[possibleStudent].values
         if minDist<studentRadius:
             print("Actual student {}. Guessed ".format(testStudent)+"face belongs to ", possibleStudent)
-            path=r"..\eigenFace\pointer.jpg"
+            path=r"pointer.jpg"
             message=cv2.imread(path,0)
             initPos=92*(pos-1)
             collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
@@ -233,14 +233,14 @@ for i in range(0,numOfTestImages):
             diffPercent=(minDist-studentRadius)/minDist
             if diffPercent<threshold:
                 print("Actual student {}. Guessed ".format(testStudent)+"face belongs to ", possibleStudent)
-                path=r"..\eigenFace\pointer.jpg"
+                path=r"pointer.jpg"
                 message=cv2.imread(path,0)
                 initPos=92*(pos-1)
                 collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
                 guess=pos
             else:
                 print("Actual student {}. Guessed ".format(testStudent)+"new face")
-                path=r"..\eigenFace\new-01.jpg"
+                path=r"new-01.jpg"
                 message=cv2.imread(path,0)
                 initPos=414
                 collage(dir_path,studentRange,testImg,projectedFace,message,initPos)
