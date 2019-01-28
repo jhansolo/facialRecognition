@@ -1,0 +1,13 @@
+Python implementation of the Local Binary Pattern Histogram algorithm for facial recognition.
+
+Run the "LBPH_train.py" file first, then run the "LBPH_main.py"
+
+Cambridge ORL database: 40 subjects, 10 photos each.
+
+20 of the subjects are chosen as the known subjects. 
+
+4 photos each of the known subjects and unknown subjects are used for training.
+
+Testing faces are drawn from the remaining 240 photos (6 each of the total 40 subjects)
+
+Current specific tuning results in 90% accuracy over 100 random test cases
