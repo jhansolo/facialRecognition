@@ -11,7 +11,7 @@ to one of the known subjects or is a completely new face
 """
 
 import LBPH
-
+import numpy as np
 
 
 loadPath='cambridge\s{}\{}.pgm'
