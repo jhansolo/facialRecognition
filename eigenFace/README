@@ -1,0 +1,12 @@
+implements the eigenface algorithm discussed by Turk and Pentland.
+run "main.py" in your python IDE to see the results.
+
+2 ways to view the results:
+    #1(default)- graphic pop-up window showing the 10 known subjects, the chosen test face, and the eigenface reconstruction
+         of the test face. If the test face belongs to one of the 10 known subjects, an arrow will identify that 
+         subject. If the test face does not belong to the 10 know subjects, a "new face" message will appear. If the 
+         test face is not a face at all, a "not a face" message will appear
+    #2 - cycles through the entire database and checks for the accuracy of the algorithm's predicitions against all of them.
+         Displays the subject number chosen, the guess made, and overall accuracy statistics
+         
+uses numpy, pandas, and cv2
